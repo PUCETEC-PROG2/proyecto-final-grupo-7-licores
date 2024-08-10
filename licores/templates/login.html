@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+<div class="row d-flex justify-content-center">
+    <div class="col-md-4">
+        <p style="height: 3rem;"></p>
+        <h1><b>Inicio de sesión</b></h1>
+        <form action="{% url 'licores:login' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="username" class="form-label" ><strong>Usuario:</strong></label>
+                <input type="text" name="username" id="username" class="form-control" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label"><strong>Contraseña:</strong></label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary"><strong>Ingresar</strong></button>
+        </form>
+    </div>
+
+</div>
+{% endblock content %}

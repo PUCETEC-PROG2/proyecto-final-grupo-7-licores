@@ -1,4 +1,3 @@
-# Create your models here
 from django.core.validators import RegexValidator
 from django.db import models
  
@@ -9,13 +8,13 @@ class Customer(models.Model):
     
     phone_validator = RegexValidator(
         regex=r'^09\d{8}$',
-        message="El número de celular debe tener exactamente 10 dígitos y comenzar con '09'."
+        message="El número de celular debe tener exactamente 10 numeros y comenzar con '09'."
     )
     nummber_phone = models.CharField(validators=[phone_validator], max_length=10, null=False)
     
     id_card_validator = RegexValidator(
         regex=r'^\d{10}$',
-        message="El número de cédula ecuatoriana debe tener exactamente 10 dígitos."
+        message="El número de cédula ecuatoriana debe tener exactamente 10 numeros."
     )
     identification_card = models.CharField(
         validators=[id_card_validator],
@@ -29,33 +28,32 @@ class Customer(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=50, null=False)
     TYPE_CHOICES = [
-        ('Destilado'),
-        ('Vino'),
-        ('Cerveza'),
-        ('Licor'),
-        ('Espirituoso'),
-        ('Aperitivo'),
+        ('Destilado', 'Destilado'),
+        ('Vino', 'Vino'),
+        ('Cerveza', 'Cerveza'),
+        ('Licor', 'Licor'),
+        ('Espirituoso', 'Espirituoso'),
+        ('Aperitivo', 'Aperitivo'),
     ]
     type = models.CharField(max_length=30, choices=TYPE_CHOICES, null=False)
     
     SWEETNESS_CHOICES = [
-        ('Seco'),
-        ('Semi-seco'),
-        ('Dulce'),
+        ('Seco', 'Seco'),
+        ('Semi-seco', 'Semi-seco'),
+        ('Dulce', 'Dulce'),
     ]
     sweetness = models.CharField(max_length=30, choices=SWEETNESS_CHOICES, null=False)
     
     PERCENTAGE_CHOICES = [
-        ('Baja graduacion'),
-        ('Media graduacion'),
-        ('Alta graduacion'),
+        ('Baja graduacion', 'Baja graduación'),
+        ('Media graduacion', 'Media graduación'),
+        ('Alta graduacion', 'Alta graduación'),
     ]
     percentage = models.CharField(max_length=30, choices=PERCENTAGE_CHOICES, null=False)
     
-    
     TASTING_CHOICES = [
-        ('Para Cócteles'),
-        ('Para Degustación'),
+        ('Para Cócteles', 'Para Cócteles'),
+        ('Para Degustación', 'Para Degustación'),
     ]
     tasting = models.CharField(max_length=30, choices=TASTING_CHOICES, null=False)
  

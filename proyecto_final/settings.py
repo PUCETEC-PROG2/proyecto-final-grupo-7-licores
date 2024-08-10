@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'proyecto_final.wsgi.application'
 DATABASES = {
       'default': {
           'ENGINE': 'django.db.backends.postgresql',
-          'NAME': 'Licoreria',
+          'NAME': 'licoreria',
           'USER': 'postgres',
           'PASSWORD': 'pucetec',
           'HOST': 'localhost',
@@ -122,7 +122,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+#Media files
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Configuracion de autentificación
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = 'licores:login'

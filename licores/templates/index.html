@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Principal{% endblock title %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <div class="col">
+            <div class="card h-100">
+                <img src="{% static "cliente.png" %}" class="card-img-top" alt="Clientes">
+                <div class="card-body">
+                    <h1 class="card-title"><strong>Clientes</strong></h5>
+                    <p class="card-text">Administrar clientes.</p>
+                    <a href="{% url 'licores:customer' %}" class="btn btn-primary"><strong>Ir a Clientes</strong></a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="{% static "categoria.png" %}" class="card-img-top" alt="Categorías">
+                <div class="card-body">
+                    <h2 class="card-title"><strong><big>Categorías</big></strong></h5>
+                    <p class="card-text">Administrar categorías.</p>
+                    <a href="{% url 'licores:category' %}" class="btn btn-primary"><strong>Ir a Categorías</strong></a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="{% static "producto.png" %}" class="card-img-top" alt="Productos">
+                <div class="card-body">
+                    <h1 class="card-title"><strong>Productos</strong></h5>
+                    <p class="card-text">Administrar productos.</p>
+                    <a href="{% url 'licores:product' %}" class="btn btn-primary"><strong>Ir a Productos</strong></a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="{% static "venta.png" %}" class="card-img-top" alt="Ventas">
+                <div class="card-body">
+                    <h1 class="card-title"><strong>Ventas</strong></h5>
+                    <p class="card-text">Administrar ventas.</p>
+                    <a href="{% url 'licores:sale' %}" class="btn btn-primary"><strong>Ir a Ventas</strong></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

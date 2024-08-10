@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Clientes{% endblock title %}
+{% block content %}
+<h5>
+    <p style="height: 1rem;"></p>
+    <a href="{% url 'licores:add_customer' %}" class="btn btn-primary">
+        <i class="fa-regular fa-address-card"> Agregar Cliente</i>
+    </a>
+    <p style="height: 1rem;"></p>
+    <ol class="list-group list-group-numbered">
+        {% for customer in customers %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold"><strong>Nombre:</strong> {{ customer }}</div>
+                    <p class="card-text"><strong>Cedula:</strong> {{ customer.identification_card }}</p>
+            </div>
+                <div>
+                    <a href="{% url 'licores:info_customer' customer.id %}" class="btn btn-primary">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'licores:edit_customer' customer.id %}" class="btn btn-primary">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <a href="{% url 'licores:delete_customer' customer.id %}" class="btn btn-danger">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </div>  
+        </li>
+        {% endfor %}
+    </ol>
+</h5>
+{% endblock content %}

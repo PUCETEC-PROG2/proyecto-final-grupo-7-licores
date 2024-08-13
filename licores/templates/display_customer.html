@@ -2,6 +2,10 @@
 {% block title %}Cliente {{ customer }}{% endblock title %}
 {% block content %}
 <p style="height: 1rem;"></p>
+<a href="{% url 'licores:customer' %}" class="btn btn-primary">
+    <i class="fa-solid fa-arrow-left"><strong> Volver</strong></i>
+</a>
+<p style="height: 1rem;"></p>
 <h1><strong>Información:<strong></h1>
 <p style="height: 5px;"></p>
 <h4>

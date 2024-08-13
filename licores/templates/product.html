@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Productos{% endblock title %}
+{% block content %}
+<h5>
+    <p style="height: 1rem;"></p>
+    <a href="{% url 'licores:add_product' %}" class="btn btn-primary">
+        <i class="fa-solid fa-wine-bottle"> Agregar Producto</i>
+    </a>
+    <p style="height: 1rem;"></p>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for product in products %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ product.picture.url }}" alt="" class="img-fluid rounded-start">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title"><strong>Nombre:</strong> {{ product }}</h5>
+                                <p class="card-text"><strong>Precio:</strong> {{ product.price }}</p>
+                                <p class="card-text"><strong>Stock:</strong> {{ product.amount }}</p>
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'licores:info_product' product.id %}" class="btn btn-primary">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'licores:edit_product' product.id %}" class="btn btn-primary">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'licores:delete_product' product.id %}" class="btn btn-danger">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                    <a href="{% url 'licores:info_product' product.id %}" class="btn btn-success">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</h5>
+{% endblock content %}

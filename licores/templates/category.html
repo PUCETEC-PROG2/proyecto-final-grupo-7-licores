@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Categorias{% endblock title %}
+{% block content %}
+<h5>
+    <p style="height: 1rem;"></p>
+    <a href="{% url 'licores:add_category' %}" class="btn btn-primary">
+        <i class="fa-solid fa-list"> Agregar Categoria</i>
+    </a>
+    <p style="height: 1rem;"></p>
+    <ol class="list-group list-group-numbered">
+        {% for category in categorys %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold"><strong>Categoria:</strong> {{ category }}</div>
+                    <p class="card-text"><strong>Porcentaje de Alcohol:</strong> {{ category.percentage }}</p>
+            </div>
+                <div>
+                    <a href="{% url 'licores:info_category' category.id %}" class="btn btn-primary">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'licores:edit_category' category.id %}" class="btn btn-primary">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <a href="{% url 'licores:delete_category' category.id %}" class="btn btn-danger">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </div>  
+        </li>
+        {% endfor %}
+    </ol>
+</h5>
+{% endblock content %}

@@ -71,9 +71,10 @@ class Product(models.Model):
         return f"{self.name}"
     
 class Sale(models.Model):
-    date = models.DateTimeField(null=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    date = models.DateTimeField(null=False)
+    quantity = models.PositiveIntegerField()
     price = models.DecimalField(null=False, max_digits=10, decimal_places=2)
     
     def __str__(self):

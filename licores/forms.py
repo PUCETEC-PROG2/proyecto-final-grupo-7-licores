@@ -9,14 +9,14 @@ class CustomerForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'birth_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'number_phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'nummber_phone': forms.TextInput(attrs={'class': 'form-control'}),
             'identification_card': forms.TextInput(attrs={'class': 'form-control'})
         }
         labels = {
             'first_name': 'Nombre',
             'last_name': 'Apellido',
             'birth_date': 'Fecha de Nacimiento',
-            'number_phone': 'Teléfono',
+            'nummber_phone': 'Teléfono',
             'identification_card': 'Cédula de Identidad'
         }
         
@@ -66,11 +66,13 @@ class SaleForm(forms.ModelForm):
             'date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
             'product': forms.Select(attrs={'class': 'form-control'}),
             'customer': forms.Select(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
         }
         labels = {
             'date': 'Fecha de la Venta',
             'product': 'Producto',
             'customer': 'Cliente',
+            'quantity': 'Cantidad',
             'price': 'Precio de Venta',
         }

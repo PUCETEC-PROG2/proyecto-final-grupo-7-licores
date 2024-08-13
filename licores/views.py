@@ -163,23 +163,42 @@ def add_sale(request):
     if request.method == 'POST':
         form = SaleForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('licores:sale')
+            sale = form.save(commit=False)
+            product = sale.product
+            if sale.quantity > product.amount:
+                form.add_error('quantity', 'No hay suficiente stock disponible.')
+            else:
+                product.amount -= sale.quantity
+                product.save()
+                sale.save()
+                return redirect('licores:sale')
     else:
-        form = SaleForm()   
+        form = SaleForm()
+
     return render(request, 'sale_form.html', {'form': form})
 
 
 @login_required
 def edit_sale(request, id):
-    sale = get_object_or_404(Sale, pk = id)
+    sale = get_object_or_404(Sale, pk=id)
+    original_quantity = sale.quantity  # Para comparar la cantidad original
+
     if request.method == 'POST':
         form = SaleForm(request.POST, request.FILES, instance=sale)
         if form.is_valid():
-            form.save()
-            return redirect('licores:sale')
+            sale = form.save(commit=False)
+            product = sale.product
+            quantity_change = sale.quantity - original_quantity
+            if quantity_change > product.amount:
+                form.add_error('quantity', 'No hay suficiente stock disponible.')
+            else:
+                product.amount -= quantity_change
+                product.save()
+                sale.save()
+                return redirect('licores:sale')
     else:
-        form = SaleForm(instance=sale)       
+        form = SaleForm(instance=sale)
+
     return render(request, 'sale_form.html', {'form': form})
 
 @login_required

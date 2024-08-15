@@ -13,17 +13,11 @@
             <div class="ms-2 me-auto">
                 <div class="fw-bold"><strong>Fecha:</strong> {{ sale.date }}</div>
                     <p class="card-text"><strong>Cliente:</strong> {{ sale.customer }}</p>
-                    <p class="card-text"><strong>Precio:</strong> {{ sale.price }}</p>
+                    <p class="card-text"><strong>Precio:</strong> {{ sale.total_price }}</p>
             </div>
                 <div>
                     <a href="{% url 'licores:info_sale' sale.id %}" class="btn btn-primary">
                         <i class="fa-solid fa-eye"></i>
-                    </a>
-                    <a href="{% url 'licores:edit_sale' sale.id %}" class="btn btn-primary">
-                        <i class="fa-solid fa-pencil"></i>
-                    </a>
-                    <a href="{% url 'licores:delete_sale' sale.id %}" class="btn btn-danger">
-                        <i class="fa-solid fa-trash"></i>
                     </a>
                 </div>  
         </li>

@@ -61,18 +61,24 @@ class ProductForm(forms.ModelForm):
 class SaleForm(forms.ModelForm):
     class Meta:
         model = Sale
-        fields = '__all__'
+        fields = ['customer', 'date']
         widgets = {
-            'date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
-            'product': forms.Select(attrs={'class': 'form-control'}),
             'customer': forms.Select(attrs={'class': 'form-control'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
         labels = {
-            'date': 'Fecha de la Venta',
-            'product': 'Producto',
             'customer': 'Cliente',
-            'quantity': 'Cantidad',
-            'price': 'Precio de Venta',
+            'date': 'Fecha',
         }
+
+class SaleProductForm(forms.Form):
+    select = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    product_id = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
+    product_name = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
+    category = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
+    quantity = forms.IntegerField(min_value=0, widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    price = forms.DecimalField(max_digits=10, decimal_places=2, widget=forms.HiddenInput(), initial=0)
+
+from django.forms import formset_factory
+
+SaleProductFormSet = formset_factory(SaleProductForm, extra=0)

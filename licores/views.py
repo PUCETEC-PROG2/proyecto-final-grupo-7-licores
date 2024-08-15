@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-from licores.forms import CustomerForm, CategoryForm, ProductForm, SaleForm
-from .models import Customer, Category, Product, Sale
+from licores.forms import CustomerForm, CategoryForm, ProductForm, SaleForm, SaleProductFormSet
+from .models import Customer, Category, Product, Sale, SaleItem
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
@@ -143,10 +143,18 @@ def delete_product(request, id):
     product.delete()
     return redirect("licores:product")
 
+@login_required
+def add_saleproduct(request, product_id):
+    # Obtener el producto basado en el ID pasado en la URL
+    product = get_object_or_404(Product, id=product_id)
+    
+    # Redirigir a la vista de add_sale pasando el ID del producto en la sesión
+    request.session['selected_product_id'] = product_id
+    return redirect('licores:add_sale')
 
 
 def sale(request):
-    sales = Sale.objects.order_by('product')
+    sales = Sale.objects.order_by('date')
     template = loader.get_template('sale.html')
     return HttpResponse(template.render({'sales': sales}, request))
 
@@ -160,49 +168,70 @@ def info_sale(request, sale_id):
 
 @login_required
 def add_sale(request):
-    if request.method == 'POST':
-        form = SaleForm(request.POST, request.FILES)
-        if form.is_valid():
-            sale = form.save(commit=False)
-            product = sale.product
-            if sale.quantity > product.amount:
-                form.add_error('quantity', 'No hay suficiente stock disponible.')
-            else:
-                product.amount -= sale.quantity
-                product.save()
-                sale.save()
-                return redirect('licores:sale')
-    else:
-        form = SaleForm()
+    products = Product.objects.all()
 
-    return render(request, 'sale_form.html', {'form': form})
+    # Obtener el ID del producto seleccionado, si hay
+    selected_product_id = request.session.get('selected_product_id')
 
+    initial_data = [
+        {
+            'product_id': product.id,
+            'product_name': product.name,
+            'category': product.category,
+            'quantity': 0,
+            'price': product.price,  # Añadir el precio aquí
+            'select': True if product.id == selected_product_id else False
+        }
+        for product in products
+    ]
 
-@login_required
-def edit_sale(request, id):
-    sale = get_object_or_404(Sale, pk=id)
-    original_quantity = sale.quantity  # Para comparar la cantidad original
+    if selected_product_id:
+        del request.session['selected_product_id']
 
     if request.method == 'POST':
-        form = SaleForm(request.POST, request.FILES, instance=sale)
-        if form.is_valid():
-            sale = form.save(commit=False)
-            product = sale.product
-            quantity_change = sale.quantity - original_quantity
-            if quantity_change > product.amount:
-                form.add_error('quantity', 'No hay suficiente stock disponible.')
-            else:
-                product.amount -= quantity_change
-                product.save()
-                sale.save()
-                return redirect('licores:sale')
+        sale_form = SaleForm(request.POST)
+        formset = SaleProductFormSet(request.POST)
+        
+        if sale_form.is_valid() and formset.is_valid():
+            sale = sale_form.save(commit=False)
+            total_price = 0
+            any_selected = False
+            has_stock_issue = False
+
+            for form in formset:
+                if form.cleaned_data.get('select'):
+                    any_selected = True
+                    product = Product.objects.get(id=form.cleaned_data['product_id'])
+                    quantity = form.cleaned_data['quantity']
+                    price = form.cleaned_data['price']
+
+                    if product.amount < quantity:
+                        has_stock_issue = True
+                        form.add_error('quantity', 'No hay suficiente stock para este producto.')
+
+                    total_price += price * quantity
+
+            if not any_selected:
+                return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset, 'error': 'Debe seleccionar al menos un producto.'})
+
+            if has_stock_issue:
+                return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset})
+
+            sale.total_price = total_price
+            sale.save()
+
+            for form in formset:
+                if form.cleaned_data.get('select'):
+                    product = Product.objects.get(id=form.cleaned_data['product_id'])
+                    quantity = form.cleaned_data['quantity']
+                    price = form.cleaned_data['price']
+                    SaleItem.objects.create(sale=sale, product=product, quantity=quantity, price=price)
+                    product.amount -= quantity
+                    product.save()
+            
+            return redirect('licores:sale')
     else:
-        form = SaleForm(instance=sale)
-
-    return render(request, 'sale_form.html', {'form': form})
-
-@login_required
-def delete_sale(request, id):
-    sale = get_object_or_404(Sale, pk = id)
-    sale.delete()
-    return redirect("licores:sale")
+        sale_form = SaleForm()
+        formset = SaleProductFormSet(initial=initial_data)
+    
+    return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset})

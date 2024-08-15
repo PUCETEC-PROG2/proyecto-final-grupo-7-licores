@@ -18,6 +18,7 @@
                         <div class="col-md-8">
                             <div class="card-body">
                                 <h5 class="card-title"><strong>Nombre:</strong> {{ product }}</h5>
+                                <h5 class="card-title"><strong>Categoria:</strong> {{ product.category }}</h5>
                                 <p class="card-text"><strong>Precio:</strong> {{ product.price }}</p>
                                 <p class="card-text"><strong>Stock:</strong> {{ product.amount }}</p>
                                 {% if user.is_authenticated %}
@@ -27,11 +28,11 @@
                                     <a href="{% url 'licores:edit_product' product.id %}" class="btn btn-primary">
                                         <i class="fa-solid fa-pencil"></i>
                                     </a>
+                                    <a href="{% url 'licores:add_saleproduct' product.id %}" class="btn btn-primary">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </a>
                                     <a href="{% url 'licores:delete_product' product.id %}" class="btn btn-danger">
                                         <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                    <a href="{% url 'licores:info_product' product.id %}" class="btn btn-success">
-                                        <i class="fa-solid fa-cart-shopping"></i>
                                     </a>
                                 {% endif %}
                             </div>

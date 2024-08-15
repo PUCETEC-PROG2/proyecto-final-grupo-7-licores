@@ -71,11 +71,18 @@ class Product(models.Model):
         return f"{self.name}"
     
 class Sale(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     date = models.DateTimeField(null=False)
-    quantity = models.PositiveIntegerField()
-    price = models.DecimalField(null=False, max_digits=10, decimal_places=2)
-    
+    total_price = models.DecimalField(null=False, max_digits=10, decimal_places=2, default=0)
+
     def __str__(self):
-        return f"{self.date} {self.customer} {self.price}"
+        return f"{self.date} {self.customer} {self.total_price}"
+
+class SaleItem(models.Model):
+    sale = models.ForeignKey(Sale, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(null=True)
+    price = models.DecimalField(null=False, max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.product.name} (x{self.quantity})"

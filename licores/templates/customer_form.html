@@ -10,5 +10,6 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'licores:customer' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 {% endblock content %}

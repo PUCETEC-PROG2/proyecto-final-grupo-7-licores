@@ -77,8 +77,7 @@ class SaleProductForm(forms.Form):
     product_name = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
     category = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
     quantity = forms.IntegerField(min_value=0, widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    price = forms.DecimalField(max_digits=10, decimal_places=2, widget=forms.HiddenInput(), initial=0)
-
+    price = forms.DecimalField(max_digits=10, decimal_places=2, widget=forms.NumberInput(attrs={'readonly': 'readonly', 'class': 'form-control'}), initial=0)
 from django.forms import formset_factory
 
 SaleProductFormSet = formset_factory(SaleProductForm, extra=0)

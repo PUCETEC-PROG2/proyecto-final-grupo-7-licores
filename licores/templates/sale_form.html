@@ -38,7 +38,7 @@
                     <td>{{ form.product_name }}</td>
                     <td>{{ form.category }}</td>
                     <td>{{ form.quantity }}</td>
-                    <td data-price="{{ form.price.value }}">{{ form.price.value }}</td>
+                    <td data-price="{{ form.price.value }}" >{{ form.price }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -57,29 +57,29 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    function updateTotal() {
-        let total = 0;
-        document.querySelectorAll('tbody tr').forEach(function (row) {
-            const selectCheckbox = row.querySelector('input[name$="-select"]');
-            const quantityInput = row.querySelector('input[name$="-quantity"]');
-            const price = parseFloat(row.querySelector('[data-price]').getAttribute('data-price'));
-            
-            if (selectCheckbox.checked) {
-                const quantity = parseFloat(quantityInput.value) || 0;
-                total += price * quantity;
-            }
+    document.addEventListener('DOMContentLoaded', function () {
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('tbody tr').forEach(function (row) {
+                const selectCheckbox = row.querySelector('input[name$="-select"]');
+                const quantityInput = row.querySelector('input[name$="-quantity"]');
+                const price = parseFloat(row.querySelector('[data-price]').getAttribute('data-price'));
+    
+                if (selectCheckbox.checked) {
+                    const quantity = parseFloat(quantityInput.value) || 0;
+                    total += price * quantity;
+                }
+            });
+            document.getElementById('total-price').textContent = total.toFixed(2);
+        }
+    
+        // Eventos para actualizar el total
+        document.querySelectorAll('input[name$="-select"], input[name$="-quantity"]').forEach(function (input) {
+            input.addEventListener('change', updateTotal);
         });
-        document.getElementById('total-price').textContent = total.toFixed(2);
-    }
-
-    // Eventos para actualizar el total
-    document.querySelectorAll('input[name$="-select"], input[name$="-quantity"]').forEach(function (input) {
-        input.addEventListener('change', updateTotal);
+    
+        // Inicializar el total al cargar la página
+        updateTotal();
     });
-
-    // Inicializar el total al cargar la página
-    updateTotal();
-});
 </script>
 {% endblock %}

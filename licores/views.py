@@ -233,5 +233,17 @@ def add_sale(request):
     else:
         sale_form = SaleForm()
         formset = SaleProductFormSet(initial=initial_data)
+        
+    if not sale_form.is_valid():
+        print("SaleForm errors:", sale_form.errors)
+    if not formset.is_valid():
+        print("Formset errors:", formset.errors)
+        
+    if not sale_form.is_valid() or not formset.is_valid():
+        return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset})
+    
+    print("Total Price:", total_price)
+    print("Saving Sale:", sale)
+
     
     return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset})

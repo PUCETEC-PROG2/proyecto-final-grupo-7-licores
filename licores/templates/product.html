@@ -31,7 +31,7 @@
                                     <a href="{% url 'licores:add_saleproduct' product.id %}" class="btn btn-primary">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                     </a>
-                                    <a href="{% url 'licores:delete_product' product.id %}" class="btn btn-danger">
+                                    <a href="{% url 'licores:delete_product' product.id %}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este Producto?');">
                                         <i class="fa-solid fa-trash"></i>
                                     </a>
                                 {% endif %}

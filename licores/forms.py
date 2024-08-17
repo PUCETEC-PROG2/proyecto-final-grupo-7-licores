@@ -73,11 +73,12 @@ class SaleForm(forms.ModelForm):
 
 class SaleProductForm(forms.Form):
     select = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-    product_id = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
+    product_id = forms.IntegerField(widget=forms.NumberInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
     product_name = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
     category = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}))
     quantity = forms.IntegerField(min_value=0, widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    price = forms.DecimalField(max_digits=10, decimal_places=2, widget=forms.NumberInput(attrs={'readonly': 'readonly', 'class': 'form-control'}), initial=0)
-from django.forms import formset_factory
+    price = forms.DecimalField(max_digits=10, decimal_places=2, widget=forms.HiddenInput())
 
-SaleProductFormSet = formset_factory(SaleProductForm, extra=0)
+# Creación de un formset para manejar múltiples productos en la venta
+from django.forms import formset_factory
+SaleProductFormSet = formset_factory(SaleProductForm, extra=0) # No se agregarán formularios adicionales automáticamente

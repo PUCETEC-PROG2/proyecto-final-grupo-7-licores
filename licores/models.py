@@ -6,12 +6,14 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=30, null=False)
     birth_date = models.DateField(null=False)
     
+    # Validador para asegurar que el número de teléfono siga el formato requerido
     phone_validator = RegexValidator(
-        regex=r'^09\d{8}$',
+        regex=r'^09\d{8}$', 
         message="El número de celular debe tener exactamente 10 numeros y comenzar con '09'."
     )
     nummber_phone = models.CharField(validators=[phone_validator], max_length=10, null=False)
     
+    # Validador para asegurar que la cédula de identidad ecuatoriana tenga 10 dígitos
     id_card_validator = RegexValidator(
         regex=r'^\d{10}$',
         message="El número de cédula ecuatoriana debe tener exactamente 10 numeros."

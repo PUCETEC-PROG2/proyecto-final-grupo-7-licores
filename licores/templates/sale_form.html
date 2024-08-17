@@ -38,7 +38,10 @@
                     <td>{{ form.product_name }}</td>
                     <td>{{ form.category }}</td>
                     <td>{{ form.quantity }}</td>
-                    <td data-price="{{ form.price.value }}" >{{ form.price }}</td>
+                    <td>
+                        {{ form.price.value }} <!-- Mostrar el precio aquí -->
+                        {{ form.price }} <!-- Campo oculto que se envía con el formulario -->
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -57,29 +60,31 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        function updateTotal() {
-            let total = 0;
-            document.querySelectorAll('tbody tr').forEach(function (row) {
-                const selectCheckbox = row.querySelector('input[name$="-select"]');
-                const quantityInput = row.querySelector('input[name$="-quantity"]');
-                const price = parseFloat(row.querySelector('[data-price]').getAttribute('data-price'));
-    
-                if (selectCheckbox.checked) {
-                    const quantity = parseFloat(quantityInput.value) || 0;
-                    total += price * quantity;
-                }
-            });
-            document.getElementById('total-price').textContent = total.toFixed(2);
-        }
-    
-        // Eventos para actualizar el total
-        document.querySelectorAll('input[name$="-select"], input[name$="-quantity"]').forEach(function (input) {
-            input.addEventListener('change', updateTotal);
+document.addEventListener('DOMContentLoaded', function () {
+    // Función para actualizar el precio total cuando se selecciona un producto o se cambia la cantidad
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll('tbody tr').forEach(function (row) { // Itera sobre cada fila de la tabla de productos
+            const selectCheckbox = row.querySelector('input[name$="-select"]');
+            const quantityInput = row.querySelector('input[name$="-quantity"]');
+            const price = parseFloat(row.querySelector('input[name$="-price"]').value) || 0;
+            
+            // Si el checkbox está marcado, calcula el subtotal para ese producto
+            if (selectCheckbox.checked) {
+                const quantity = parseFloat(quantityInput.value) || 0;
+                total += price * quantity;
+            }
         });
-    
-        // Inicializar el total al cargar la página
-        updateTotal();
+        document.getElementById('total-price').textContent = total.toFixed(2); // Actualiza el contenido del elemento que muestra el total
+    }
+
+    // Añade eventos para actualizar el total cuando cambian los inputs de selección o cantidad
+    document.querySelectorAll('input[name$="-select"], input[name$="-quantity"]').forEach(function (input) {
+        input.addEventListener('change', updateTotal);
     });
+
+    // Llama a la función para calcular el total al cargar la página
+    updateTotal();
+});
 </script>
 {% endblock %}

@@ -15,15 +15,17 @@
                     <p class="card-text"><strong>Cedula:</strong> {{ customer.identification_card }}</p>
             </div>
                 <div>
-                    <a href="{% url 'licores:info_customer' customer.id %}" class="btn btn-primary">
-                        <i class="fa-solid fa-eye"></i>
-                    </a>
-                    <a href="{% url 'licores:edit_customer' customer.id %}" class="btn btn-primary">
-                        <i class="fa-solid fa-pencil"></i>
-                    </a>
-                    <a href="{% url 'licores:delete_customer' customer.id %}" class="btn btn-danger">
-                        <i class="fa-solid fa-trash"></i>
-                    </a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'licores:info_customer' customer.id %}" class="btn btn-primary">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <a href="{% url 'licores:edit_customer' customer.id %}" class="btn btn-primary">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <a href="{% url 'licores:delete_customer' customer.id %}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este Cliente?');">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    {% endif %}
                 </div>  
         </li>
         {% endfor %}

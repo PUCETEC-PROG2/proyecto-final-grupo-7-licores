@@ -145,10 +145,7 @@ def delete_product(request, id):
 
 @login_required
 def add_saleproduct(request, product_id):
-    # Obtener el producto basado en el ID pasado en la URL
     product = get_object_or_404(Product, id=product_id)
-    
-    # Redirigir a la vista de add_sale pasando el ID del producto en la sesión
     request.session['selected_product_id'] = product_id
     return redirect('licores:add_sale')
 
@@ -169,9 +166,7 @@ def info_sale(request, sale_id):
 @login_required
 def add_sale(request):
     products = Product.objects.all()
-
-    # Obtener el ID del producto seleccionado, si hay
-    selected_product_id = request.session.get('selected_product_id')
+    selected_product_id = request.session.get('selected_product_id') # Obtener el ID del producto previamente seleccionado desde la sesión (si existe)
 
     initial_data = [
         {
@@ -179,24 +174,25 @@ def add_sale(request):
             'product_name': product.name,
             'category': product.category,
             'quantity': 0,
-            'price': product.price,  # Añadir el precio aquí
+            'price': product.price,
             'select': True if product.id == selected_product_id else False
         }
         for product in products
     ]
 
+    # Si había un producto seleccionado, eliminar su ID de la sesión
     if selected_product_id:
         del request.session['selected_product_id']
 
     if request.method == 'POST':
         sale_form = SaleForm(request.POST)
-        formset = SaleProductFormSet(request.POST)
+        formset = SaleProductFormSet(request.POST) # Crear el formset de productos con los datos enviados
         
         if sale_form.is_valid() and formset.is_valid():
             sale = sale_form.save(commit=False)
             total_price = 0
             any_selected = False
-            has_stock_issue = False
+            has_stock_issue = False # Verificar si al menos un producto está seleccionado
 
             for form in formset:
                 if form.cleaned_data.get('select'):
@@ -215,7 +211,7 @@ def add_sale(request):
                 return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset, 'error': 'Debe seleccionar al menos un producto.'})
 
             if has_stock_issue:
-                return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset})
+                return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset, 'error': 'No hay suficiente stock.'})
 
             sale.total_price = total_price
             sale.save()
@@ -230,20 +226,12 @@ def add_sale(request):
                     product.save()
             
             return redirect('licores:sale')
+        else:
+            print("SaleForm errors:", sale_form.errors)
+            print("Formset errors:", formset.errors)
+            print("POST data:", request.POST)
     else:
         sale_form = SaleForm()
         formset = SaleProductFormSet(initial=initial_data)
-        
-    if not sale_form.is_valid():
-        print("SaleForm errors:", sale_form.errors)
-    if not formset.is_valid():
-        print("Formset errors:", formset.errors)
-        
-    if not sale_form.is_valid() or not formset.is_valid():
-        return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset})
-    
-    print("Total Price:", total_price)
-    print("Saving Sale:", sale)
-
     
     return render(request, 'sale_form.html', {'sale_form': sale_form, 'formset': formset})

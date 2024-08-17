@@ -34,7 +34,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for item in sale.items.all %}
+        {% for item in sale.items.all %} <!-- Repite por cada producto vendido en la venta -->
         <tr>
             <td>{{ item.product.name }}</td>
             <td>{{ item.quantity }}</td>
